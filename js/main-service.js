@@ -64,10 +64,6 @@ function getCurrMeme() {
 function updateCurrMeme(id) {
     gMeme.selectedImgId = id
 }
-// function findIndexOfImg(url) {
-//     console.log(url)
-//     return gImgs.findIndex(img => img.url === url)
-// }
 function findImg(id) {
     return gImgs.find(img => img.id === id)
 }
@@ -91,43 +87,7 @@ function updateLine(val) {
     gMeme.lines[gMeme.selectedLineIdx].txt = val
     console.log(gCtx.measureText(val))
     if (gCtx.measureText(val).width > (gCanvas.width - 40)) updSize(-1)
-
-    // wrapText()
 }
-
-
-// function wrapText(gCtx, text, x, y, maxWidth, lineHeight) {
-//     var words = gMeme.lines[gMeme.selectedLineIdx].txt.split(' ');
-//     console.log(words)
-//     var line = '';
-
-
-//     console.log('5',gCanvas)
-//     console.log('1',gCanvas.getContext('2d'))
-//     for(var n = 0; n < words.length; n++) {
-//       var testLine = line + words[n] + ' ';
-//       console.log(testLine)
-//     //   var metrics = gCtx.measureText(testLine);
-//     //   var testWidth = metrics.width;
-
-//       var testWidth = gCanvas.getContext('2d').measureText(testLine).width;
-
-//       if (testWidth > gCanvas.width-40 && n > 0) {
-//         gCanvas.getContext('2d').fillText(line, gMeme.lines[gMeme.selectedLineIdx].coords.x, gMeme.lines[gMeme.selectedLineIdx].coords.y);
-//         line = words[n] + ' ';
-//         // gMeme.lines[gMeme.selectedLineIdx].coords.y += gMeme.lines[gMeme.selectedLineIdx].size;
-//         gMeme.lines[gMeme.selectedLineIdx].coords.y += 1.5;
-//       }
-//       else {
-//         line = testLine;
-//       }
-//     }
-//     gCanvas.getContext('2d').fillText(line, gMeme.lines[gMeme.selectedLineIdx].coords.x, gMeme.lines[gMeme.selectedLineIdx].coords.y);
-//   }
-
-
-
-
 
 function addLine() {
     console.log('adding', gCanvas.height)

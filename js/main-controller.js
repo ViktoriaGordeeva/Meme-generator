@@ -13,12 +13,13 @@ function renderImages() {
     document.querySelector('.container').innerHTML = strHTMLs.join('')
 }
 
-function onSetImg(el) {
-    // document.querySelector('.editor').style.display = 'flex'; ///!!!!!
-    // document.querySelector('.gallery').style.display = "none"; ///!!!!!
+function onSetImg(el) {    
+    document.querySelector('.editor').style.display = 'flex';
+    document.querySelector('.about').style.display = 'none'
+    document.querySelector('.gallery').style.display = 'none';
+    document.querySelector('.user-gallery').style.display = "none"; 
     onRenderCanvas(+el.dataset.id)
     updateCurrMeme(+el.dataset.id)
-
 }
 
 function onRenderCanvas(id) {
@@ -81,7 +82,17 @@ function onMoveLine(direct) {
     onRenderCanvas(currId)
 }
 function onCanvasClicked(ev) {
-    var { offsetX, offsetY } = ev;
+    var offsetX
+    var offsetY
+    if (ev.type === 'touchstart') {
+        ev.preventDefault()
+        var rect = ev.target.getBoundingClientRect();
+        offsetX = ev.targetTouches[0].pageX - rect.left;
+        offsetY = ev.targetTouches[0].pageY - rect.top;
+    } else {
+        offsetX = ev.offsetX
+        offsetY = ev.offsetY
+    }
     var clickedLine = canvasClicked(offsetX, offsetY)
     if (clickedLine) {
         updCurrLineIdx(clickedLine)
@@ -95,4 +106,56 @@ function onDownload(elLink) {
     const data = gCanvas.toDataURL();
     elLink.href = data;
     elLink.download = 'my-img.jpg';
+}
+function updPage(page) {
+    if (page === 'about') {
+        document.querySelector('.about').style.display = 'block'
+        document.querySelector('.editor').style.display = 'none'; 
+        document.querySelector('.gallery').style.display = "none";
+        document.querySelector('.user-gallery').style.display = "none";
+    }
+    if (page === 'logo') {
+        document.querySelector('.about').style.display = 'none'
+        document.querySelector('.editor').style.display = 'none';
+        document.querySelector('.gallery').style.display = 'block';
+        document.querySelector('.user-gallery').style.display = "none";
+    }
+    if (page === 'user-gallery') {
+        document.querySelector('.about').style.display = 'none'
+        document.querySelector('.editor').style.display = 'none';
+        document.querySelector('.gallery').style.display = 'none';
+        document.querySelector('.user-gallery').style.display = "block";
+    }
+
+}
+
+
+
+function uploadImg(elForm, ev) {
+    ev.preventDefault();
+    document.getElementById('imgData').value = gCanvas.toDataURL("image/jpeg");
+    // A function to be called if request succeeds
+    function onSuccess(uploadedImgUrl) {
+        uploadedImgUrl = encodeURIComponent(uploadedImgUrl)
+        document.querySelector('.share-container').innerHTML = `
+        <a class="btn" href="https://www.facebook.com/sharer/sharer.php?u=${uploadedImgUrl}&t=${uploadedImgUrl}" title="Share on Facebook" target="_blank" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=${uploadedImgUrl}&t=${uploadedImgUrl}'); return false;">
+           Share   
+        </a>`
+    }
+    doUploadImg(elForm, onSuccess);
+}
+
+function doUploadImg(elForm, onSuccess) {
+    var formData = new FormData(elForm);
+    fetch('http://ca-upload.com/here/upload.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(function (res) {
+        return res.text()
+    })
+    .then(onSuccess)
+    .catch(function (err) {
+        console.error(err)
+    })
 }

@@ -50,7 +50,15 @@ img.item:hover {
     transform: scale(1.1)
 }
 
-
+/*ABOUT*/
+.about {
+    margin: 20px;
+    display: none
+}
+.user-gallery{
+    margin: 20px;
+    display: none
+}
 /*HEADER*/
 .logo {
     flex-grow: 1;
@@ -81,7 +89,7 @@ main {
 .editor {
     gap: 40px;
     display: flex;
-    /* display: none  */
+    display: none 
 }
 
 canvas {
@@ -104,7 +112,7 @@ canvas {
     "Ap Am al-left al-cent al-right"
     " . up italic bold case"
     "left down right color colorStr"
-    ". . download download download"
+    "download download download download download"
     ;
     grid-template-columns: repeat(5, 40px);
     grid-template-rows: repeat(7, 40px);
@@ -184,6 +192,27 @@ button.download {
     background-color: #ff7f00;
     grid-area: download;
 }
+form button.btn{
+    margin-top: 10px;
+    border-radius: 0.75rem;
+    outline: none;
+    border: #ffffff;
+    height: 40px;
+    width: 100%;
+    font-family: Montserrat;
+    background-color: #ff7f00;
+}
+.share-container {
+    margin-top: 10px;
+    border-radius: 0.75rem;
+    outline: none;
+    border: #ffffff;
+    line-height: 40px;
+    width: 50%;
+    text-align: center;
+    background-color: #f8c38d;
+    vertical-align: middle;
+}
 
 /*FOOTER*/
 footer {
@@ -223,13 +252,15 @@ footer {
     .controls-container {
         column-gap: 10px;
         row-gap: 10px;
+        grid-template-columns: repeat(5, 40px);
+        grid-template-rows: repeat(6, 40px);
         grid-template-areas: 
     "text text text text text"
     " . add . delete . "
     "Ap Am al-left al-cent al-right"
     " . up italic bold case"
     "left down right color colorStr"
-    ". . download download download"
+    "download download download download download"
     ;
     }
 }
@@ -246,5 +277,8 @@ footer {
     .controls-container {
     grid-template-columns: repeat(5, 50px);
     grid-template-rows: repeat(6, 50px);
+    }
+    form button.btn{
+        height: 50px;
     }
 }
