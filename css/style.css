@@ -17,14 +17,13 @@ a {
 }
 body {
     font-family: Montserrat;
-    
 }
 
 
 /*LAYOUT*/
+
 .main-layout {
     max-width: 1250px;
-    /* width: 100%; */
     margin: 0 auto;
     background-color: #ff7f00;
     font-size: 1.1875rem;
@@ -33,9 +32,7 @@ body {
 .main-header {
     width: 100%;
     padding: 0 40px
-    /* margin-bottom: 1.3rem; */
 }
-
 
 .gallery {
     margin-bottom: 40px;
@@ -67,7 +64,6 @@ img.item:hover {
 }
 .nav li{
     padding: 20px;
-    /* border-right: 1px solid black */
 }
 
 .nav li a {
@@ -85,54 +81,19 @@ main {
 .editor {
     gap: 40px;
     display: flex;
-    /* display: none !!!!!!!!!!!!!!!! */
-}
-
-.canvas-container{
-    /* flex-grow: 1; */
-    /* width: 100%;
-    height: 100%; */
-    /* margin: auto */
-    /* margin-inline-start: 5.3125rem; */
-    /* border-radius: 5%; */
-    /* overflow: hidden; */
+    /* display: none  */
 }
 
 canvas {
     border: 1px solid black;
     display: block;
-    /* width: 100%;
-    height: 100%; */
 }
 .settings {
-    /* flex-grow: 1; */
     padding-right: 20px
-
 }
-.controls-container input[type=text] {
-    border-radius: 0.75rem;
-    outline: none;
-    border: #ffffff;
-    padding: 10px
-}
-.controls-container button {
-    background-color: #ffffff;
-    border-radius: 0.75rem;
-    outline: none;
-    border: #ffffff;
-}
-button img {
-    width: 100%;
-}
-.item9 img, .item11 img {
-    height: 100%;
-}
-
-#col {
-    height: 50%
-}
+/*settings*/
 .controls-container {
-    
+
     display: grid;
     column-gap: 10px;
     row-gap: 15px;
@@ -199,12 +160,30 @@ grid-area: text;
 .item17 {
     grid-area: colorStr;
 }
-.download {
+
+.controls-container input[type=text] {
+    border-radius: 0.75rem;
+    outline: none;
+    border: #ffffff;
+    padding: 10px
+}
+.controls-container button {
+    background-color: #ffffff;
+    border-radius: 0.75rem;
+    outline: none;
+    border: #ffffff;
+}
+button img {
+    width: 100%;
+}
+.item9 img, .item11 img {
+    height: 100%;
+}
+button.download {
+    font-family: Montserrat;
     background-color: #ff7f00;
     grid-area: download;
 }
-
-
 
 /*FOOTER*/
 footer {
@@ -216,36 +195,20 @@ footer {
 
 
 /* HELPERS */
-
 /* flex-helpers */
 
 .flex {
     display: flex;
 }
-
 .flex-column {
     display: flex;
     flex-direction: column
 }
-
-.inline-flex {
-    display: inline-flex;
-}
-
 .flex.align-center {
     align-items: center;
 }
-
-.flex.space-around {
-    justify-content: space-around;
-}
-
 .flex.space-between {
     justify-content: space-between;
-}
-
-.flex.flex-center {
-    justify-content: center;
 }
 
 /* list-helpers */
@@ -256,20 +219,8 @@ footer {
     list-style-type: none;
 }
 
-@media (max-width: 1040px) {
-    
-    canvas {
-        width: 500px;
-        height: 500px;
-    }
-}
 @media (max-width: 895px) {
-    canvas {
-        width: 400px;
-        height: 400px;
-    }
     .controls-container {
-        /* gap: 10px; */
         column-gap: 10px;
         row-gap: 10px;
         grid-template-areas: 
@@ -296,5 +247,4 @@ footer {
     grid-template-columns: repeat(5, 50px);
     grid-template-rows: repeat(6, 50px);
     }
-   
 }

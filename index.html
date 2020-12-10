@@ -24,7 +24,7 @@
     <main>
         <div class="editor">
             <div class="canvas-container">
-                <canvas id="canvas" width="650px" height="650px" onclick="onCanvasClicked(event)"></canvas>
+                <canvas id="canvas" onclick="onCanvasClicked(event)"></canvas>
             </div>
             <div class="settings">
                 <div class="controls-container">
@@ -55,22 +55,12 @@
                     <button name="caps" class="item15" onclick="onupdFontAttr(this)"><img src="icons/case.png"
                             alt=""></button>
 
-                    <!-- <form class="item16">
-                        <label for="col-text"><img id="col" src="icons/paint-board-and-brush.png" alt=""></label>
-                        <input type="color" id="col-text" value="#fffff" name="col-text" onchange="onUpdColor(this.value)"></input>
-                    </form> -->
                     <input type="color" class="item16" onchange="onUpdColor(this.value)"></input>
                     <input type="color" class="item17" onchange="onUpdColorStroke(this.value)"></input>
-
-
-
-
                     <button class="download"><a href="#" onclick="onDownload(this)" download="">Download</a></button>
                 </div>
             </div>
         </div>
-
-
 
         <div class="gallery">
             <h2>Choose an image</h2>
@@ -82,7 +72,6 @@
         <div><img class="logo-img" src="logo/logo.png" alt=""></div>
         <small>® all rights reserved</small>
     </footer>
-
 
     <script src="js/main-service.js"></script>
     <script src="js/main-controller.js"></script>

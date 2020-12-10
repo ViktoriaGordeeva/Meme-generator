@@ -1,5 +1,6 @@
 function init() {
     renderImages()
+    resizeCanvas()
 }
 
 function renderImages() {
@@ -47,6 +48,11 @@ function onDeleteLine() {
     deleteLine()
     onRenderCanvas(currId)
 }
+function onUpdAlignment(align) {
+    updAlignment(align)
+    var currId = getCurrMeme().selectedImgId
+    onRenderCanvas(currId)
+}
 function onUpdColor(color) {
     var currId = getCurrMeme().selectedImgId
     updColor(color)
@@ -85,13 +91,6 @@ function onCanvasClicked(ev) {
     }
 }
 
-
-
-function onUpdAlignment(align) {
-    updAlignment(align)
-    var currId = getCurrMeme().selectedImgId
-    onRenderCanvas(currId)
-}
 function onDownload(elLink) {
     const data = gCanvas.toDataURL();
     elLink.href = data;

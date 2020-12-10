@@ -41,28 +41,23 @@ var gMeme = {
 var gCanvas = document.querySelector('#canvas');
 var gCtx = gCanvas.getContext('2d');
 
-// resizeCanvas()
-// fillCanvas()///can be deleted
+function resizeCanvas() {
+    var canvasSize;
+    if (window.innerWidth < 650) canvasSize = window.innerWidth / 1.5;
+    if (window.innerWidth > 650) canvasSize = window.innerWidth / 1.8;
+    if (window.innerWidth > 900) canvasSize = window.innerWidth / 2;
 
-
-// function fillCanvas() {///can be deleted
-//     gCtx.fillStyle = 'lightblue'
-//     gCtx.fillRect(0, 0, gCanvas.width, gCanvas.height)
-// }
-// function resizeCanvas() {
-//     let elContainer = document.querySelector('.canvas-container');
-//     gCanvas.width = elContainer.offsetWidth
-//     gCanvas.height = elContainer.offsetHeight
-// }
-
+    gCanvas.width = canvasSize;
+    gCanvas.height = canvasSize;
+}
 
 function getImages() {
     return gImgs
 }
-
 function drawImage(img) {
     gCtx.drawImage(img, 0, 0, gCanvas.width, gCanvas.height) //img,x,y,xend,yend
 }
+
 function getCurrMeme() {
     return gMeme
 }
@@ -80,12 +75,10 @@ function createLines() {
     gMeme.lines.map(line => createLine(line))
 }
 function createLine(line) {
-    // console.log(line)
     gCtx.lineWidth = '1.5'
     gCtx.strokeStyle = line.colorStroke
     gCtx.fillStyle = line.color
     gCtx.font = `${line.italic} ${line.caps} ${line.bold} ${line.size}px Impact`
-    // gCtx.font = 'italic small-caps 900 40px serif'
     gCtx.textAlign = line.align
     var txt = line.txt
 
@@ -137,6 +130,7 @@ function updateLine(val) {
 
 
 function addLine() {
+    console.log('adding', gCanvas.height)
     var lineY
     if (gMeme.lines.length === 0) lineY = 50
     if (gMeme.lines.length === 1) lineY = gCanvas.height - 30
@@ -144,7 +138,7 @@ function addLine() {
 
     gMeme.lines.push({
         txt: 'Enter your text',
-        size: 20,
+        size: 40,
         align: 'left',
         color: 'white',
         colorStroke: 'black',
@@ -155,9 +149,22 @@ function addLine() {
     })
 }
 function deleteLine() {
-    // gMeme.lines[gMeme.selectedLineIdx].txt = ''
     var lineToDel = gMeme.lines[gMeme.selectedLineIdx]
     gMeme.lines.pop(lineToDel)
+}
+function updAlignment(align) {
+    gMeme.lines[gMeme.selectedLineIdx].align = align;
+    switch (align) {
+        case 'left':
+            gMeme.lines[gMeme.selectedLineIdx].coords.x = 10;
+            break;
+        case 'center':
+            gMeme.lines[gMeme.selectedLineIdx].coords.x = gCanvas.width / 2;
+            break;
+        case 'right':
+            gMeme.lines[gMeme.selectedLineIdx].coords.x = gCanvas.width - 10;
+            break;
+    }
 }
 function updColor(color) {
     gMeme.lines[gMeme.selectedLineIdx].color = color
@@ -216,20 +223,3 @@ function drawRect() {
 
 
 
-
-
-
-function updAlignment(align) {
-    gMeme.lines[gMeme.selectedLineIdx].align = align;
-    switch (align) {
-        case 'left':
-            gMeme.lines[gMeme.selectedLineIdx].coords.x = 10;
-            break;
-        case 'center':
-            gMeme.lines[gMeme.selectedLineIdx].coords.x = gCanvas.width / 2;
-            break;
-        case 'right':
-            gMeme.lines[gMeme.selectedLineIdx].coords.x = gCanvas.width - 10;
-            break;
-    }
-}
