@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Meme Generator</title>
+</head>
+
+<body onload="init()">
+    <header class="main-layout">
+        <div class="main-header flex space-between align-center">
+            <div class="logo"><img class="logo-img" src="logo/logo.png" alt=""></div>
+            <ul class="nav clean-list flex">
+                <li><a href="#">Gallery</a></li>
+                <li><a href="#">About</a></li>
+            </ul>
+        </div>
+    </header>
+
+
+    <main>
+        <div class="editor">
+            <div class="canvas-container">
+                <canvas id="canvas" width="650px" height="650px" onclick="onCanvasClicked(event)"></canvas>
+            </div>
+            <div class="settings">
+                <div class="controls-container">
+                    <input type="text" class="item1 text-input" placeholder="Enter your text"
+                        oninput="onUpdateLine(this.value)">
+                    <button class="item2 add-txt" onclick="onAddLine()"><img src="icons/add.png" alt=""></button>
+                    <button class="item3 del-txt" onclick="onDeleteLine()"><img src="icons/trash.png" alt=""></button>
+
+                    <button class="item4" onclick="onUpdSize(1)"><img src="icons/increase font.png" alt=""></button>
+                    <button class="item5" onclick="onUpdSize(-1)"><img src="icons/decrease font.png" alt=""></button>
+                    <button class="item6" onclick="onUpdAlignment('left')"><img src="icons/align-to-left.png"
+                            alt=""></button>
+                    <button class="item7" onclick="onUpdAlignment('center')"><img src="icons/center-text-alignment.png"
+                            alt=""></button>
+                    <button class="item8" onclick="onUpdAlignment('right')"><img src="icons/align-to-right.png"
+                            alt=""></button>
+
+                    <button class="item9" onclick="onMoveLine('up')"><img src="icons/uplast.png" alt=""></button>
+                    <button class="item10" onclick="onMoveLine('left')"><img src="icons/left.png" alt=""></button>
+                    <button class="item11" onclick="onMoveLine('down')"><img src="icons/down.png" alt=""></button>
+                    <button class="item12" onclick="onMoveLine('right')"><img src="icons/right.png" alt=""></button>
+
+
+                    <button name="italic" class="item13" onclick="onupdFontAttr(this)"><img src="icons/italic.png"
+                            alt=""></button>
+                    <button name="bold" class="item14" onclick="onupdFontAttr(this)"><img src="icons/bold.png"
+                            alt=""></button>
+                    <button name="caps" class="item15" onclick="onupdFontAttr(this)"><img src="icons/case.png"
+                            alt=""></button>
+
+                    <!-- <form class="item16">
+                        <label for="col-text"><img id="col" src="icons/paint-board-and-brush.png" alt=""></label>
+                        <input type="color" id="col-text" value="#fffff" name="col-text" onchange="onUpdColor(this.value)"></input>
+                    </form> -->
+                    <input type="color" class="item16" onchange="onUpdColor(this.value)"></input>
+                    <input type="color" class="item17" onchange="onUpdColorStroke(this.value)"></input>
+
+
+
+
+                    <button class="download"><a href="#" onclick="onDownload(this)" download="">Download</a></button>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="gallery">
+            <h2>Choose an image</h2>
+            <div class="container"></div>
+        </div>
+    </main>
+
+    <footer class="main-layout">
+        <div><img class="logo-img" src="logo/logo.png" alt=""></div>
+        <small>® all rights reserved</small>
+    </footer>
+
+
+    <script src="js/main-service.js"></script>
+    <script src="js/main-controller.js"></script>
+</body>
+
+</html>
