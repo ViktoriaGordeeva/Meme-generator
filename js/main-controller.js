@@ -13,17 +13,17 @@ function renderImages() {
     document.querySelector('.container').innerHTML = strHTMLs.join('')
 }
 
-function onSetImg(el) {    
+function onSetImg(el) {
     document.querySelector('.editor').style.display = 'flex';
     document.querySelector('.about').style.display = 'none'
     document.querySelector('.gallery').style.display = 'none';
-    document.querySelector('.user-gallery').style.display = "none"; 
-    onRenderCanvas(+el.dataset.id)
+    document.querySelector('.user-gallery').style.display = "none";
     updateCurrMeme(+el.dataset.id)
+    onRenderCanvas(+el.dataset.id)
+    document.querySelector('item1').innerText = ''
 }
 
 function onRenderCanvas(id) {
-    console.log('tried')
     var sourceImg = findImg(id)
     var img = new Image();
     img.src = sourceImg.url;
@@ -105,12 +105,12 @@ function onCanvasClicked(ev) {
 function onDownload(elLink) {
     const data = gCanvas.toDataURL();
     elLink.href = data;
-    elLink.download = 'my-img.jpg';
+    elLink.download = 'my-img.gif';
 }
 function updPage(page) {
     if (page === 'about') {
         document.querySelector('.about').style.display = 'block'
-        document.querySelector('.editor').style.display = 'none'; 
+        document.querySelector('.editor').style.display = 'none';
         document.querySelector('.gallery').style.display = "none";
         document.querySelector('.user-gallery').style.display = "none";
     }
@@ -125,6 +125,7 @@ function updPage(page) {
         document.querySelector('.editor').style.display = 'none';
         document.querySelector('.gallery').style.display = 'none';
         document.querySelector('.user-gallery').style.display = "block";
+        onRenderImgs()
     }
 
 }
@@ -151,11 +152,54 @@ function doUploadImg(elForm, onSuccess) {
         method: 'POST',
         body: formData
     })
-    .then(function (res) {
-        return res.text()
-    })
-    .then(onSuccess)
-    .catch(function (err) {
-        console.error(err)
-    })
+        .then(function (res) {
+            return res.text()
+        })
+        .then(onSuccess)
+        .catch(function (err) {
+            console.error(err)
+        })
+}
+
+function onSave() {
+    var num = getSavedImgs()
+    saveToStorage(`mem${num + 1}`, getCurrMeme())
+    incrSavedImgs()
+}
+
+function onSetUserImg(val) {
+    var meme = loadFromStorage(val)
+    document.querySelector('.editor').style.display = 'flex';
+    document.querySelector('.about').style.display = 'none'
+    document.querySelector('.gallery').style.display = 'none';
+    document.querySelector('.user-gallery').style.display = "none";
+    updateCurrMeme(meme)
+    onRenderCanvas(meme.selectedImgId)
+}
+
+function onRenderImgs() {
+    for(i=1; loadFromStorage(`mem${i}`); i++) {
+        onRenderImg(`mem${i}`)
+    }
+}
+function onRenderImg(val) {
+    var canvas = document.querySelector(`#${val}`);
+    var ctx = canvas.getContext('2d');
+    var meme = loadFromStorage(val)
+    var img = new Image();
+    var url = getImages()[meme.selectedImgId-1].url
+    img.src = url;
+    img.onload = () => {
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+        meme.lines.map(line => restoreLine(line, ctx))
+    }
+}
+function restoreLine(line, ctx) {
+    ctx.strokeStyle = line.colorStroke
+    ctx.fillStyle = line.color
+    ctx.font = `10px Impact`
+    ctx.textAlign = line.align
+    var txt = line.txt
+    ctx.fillText(txt, 5, 10)
+    ctx.strokeText(txt, 5, 10)
 }

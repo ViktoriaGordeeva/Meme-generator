@@ -19,23 +19,33 @@
             </ul>
         </div>
     </header>
-    <div class="about">
-        <h2>What is the Meme Generator?</h2>
-        <p>It's a free online image maker that allows you to add custom resizable text to images.
-            It operates in HTML5 canvas, so your images are created instantly on your own device.
-            Most commonly, people use the generator to add text captions to established memes, so technically it's more
-            of a meme "captioner" than a meme maker.
-            However, you can also upload your own images as templates.</p>
-        <h2>How can I customize my meme?</h2>
-        <p>You can move and resize the text boxes. You can customize the font color and outline color, font of the text,
-            its size. You can apply many effects to your text. </p>
-    </div>
-    <div class="user-gallery">
-        <h2>Here will be User Gallery</h2>
-    </div>
+
 
 
     <main>
+        <div class="about">
+            <h2>What is the Meme Generator?</h2>
+            <p>It's a free online image maker that allows you to add custom resizable text to images.
+                It operates in HTML5 canvas, so your images are created instantly on your own device.
+                Most commonly, people use the generator to add text captions to established memes, so technically it's
+                more
+                of a meme "captioner" than a meme maker.
+                However, you can also upload your own images as templates.</p>
+            <h2>How can I customize my meme?</h2>
+            <p>You can move and resize the text boxes. You can customize the font color and outline color, font of the
+                text,
+                its size. You can apply many effects to your text. </p>
+        </div>
+        <div class="user-gallery">
+            <h2>Your Gallery</h2>
+            <div class="user-gallery-container">
+                <canvas id="mem1" width="100px" height="100px" onclick="onSetUserImg('mem1')"></canvas>
+                <canvas id="mem2" width="100px" height="100px" onclick="onSetUserImg('mem2')"></canvas>
+                <canvas id="mem3" width="100px" height="100px" onclick="onSetUserImg('mem3')"></canvas>
+                <canvas id="mem4" width="100px" height="100px" onclick="onSetUserImg('mem4')"></canvas>
+                <canvas id="mem5" width="100px" height="100px" onclick="onSetUserImg('mem5')"></canvas>
+            </div>
+        </div>
         <div class="editor">
             <div class="canvas-container">
                 <canvas id="canvas" onclick="onCanvasClicked(event)" ontouchstart="onCanvasClicked(event)"></canvas>
@@ -72,16 +82,17 @@
                     <input type="color" class="item16" onchange="onUpdColor(this.value)"></input>
                     <input type="color" class="item17" onchange="onUpdColorStroke(this.value)"></input>
                     <button class="download"><a href="#" onclick="onDownload(this)" download="">Download</a></button>
-                   
-                    
-                
-                
+                    <button class="save"><a href="#" onclick="onSave()">Save</a></button>
+
+
+
+
                 </div>
                 <form action="" method="POST" enctype="multipart/form-data" onsubmit="uploadImg(this, event)">
                     <input name="img" id="imgData" type="hidden" />
                     <button class="btn" type="submit">Publish</button>
                     <div class="share-container"></div>
-                  </form>
+                </form>
             </div>
         </div>
 
@@ -96,6 +107,7 @@
         <small>® all rights reserved</small>
     </footer>
 
+    <script src="js/storage-service.js"></script>
     <script src="js/main-service.js"></script>
     <script src="js/main-controller.js"></script>
 </body>

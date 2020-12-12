@@ -19,6 +19,7 @@ var gImgs = [
     { id: 16, url: 'meme/16.jpg', keywords: ['happy'] },
     { id: 17, url: 'meme/17.jpg', keywords: ['happy'] },
     { id: 18, url: 'meme/18.jpg', keywords: ['happy'] },
+    { id: 19, url: 'meme/try.gif', keywords: ['happy'] },
 ];
 var gMeme = {
     selectedImgId: 5,
@@ -40,6 +41,7 @@ var gMeme = {
 
 var gCanvas = document.querySelector('#canvas');
 var gCtx = gCanvas.getContext('2d');
+var gSavedImgs = 0;
 
 function resizeCanvas() {
     var canvasSize;
@@ -54,6 +56,12 @@ function resizeCanvas() {
 function getImages() {
     return gImgs
 }
+function getSavedImgs() {
+    return gSavedImgs
+}
+function incrSavedImgs() {
+    gSavedImgs++
+}
 function drawImage(img) {
     gCtx.drawImage(img, 0, 0, gCanvas.width, gCanvas.height) //img,x,y,xend,yend
 }
@@ -61,8 +69,31 @@ function drawImage(img) {
 function getCurrMeme() {
     return gMeme
 }
-function updateCurrMeme(id) {
-    gMeme.selectedImgId = id
+function updateCurrMeme(val) {
+    // gMeme.selectedImgId = id
+
+    if (typeof (val) === 'object') {
+        gMeme = val
+    } else {
+        gMeme = {
+            selectedImgId: val,
+            selectedLineIdx: 0,
+            lines: [
+                {
+                    txt: 'Enter your text',
+                    size: 40,
+                    align: 'left',
+                    color: 'white',
+                    colorStroke: 'black',
+                    italic: '',
+                    caps: '',
+                    bold: '',
+                    coords: { x: 20, y: 50 }
+                }
+            ]
+        }
+    }
+
 }
 function findImg(id) {
     return gImgs.find(img => img.id === id)
