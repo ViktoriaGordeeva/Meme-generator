@@ -14,72 +14,88 @@ function renderImages() {
 }
 
 function onSetImg(el) {
-    document.querySelector('.editor').style.display = 'flex';
-    document.querySelector('.about').style.display = 'none'
-    document.querySelector('.gallery').style.display = 'none';
-    document.querySelector('.user-gallery').style.display = "none";
-    updateCurrMeme(+el.dataset.id)
-    onRenderCanvas(+el.dataset.id)
-    document.querySelector('item1').innerText = ''
+    updPage('editor')
+    var meme = {
+        selectedImgId: +el.dataset.id,
+        selectedLineIdx: 0,
+        selectedStickerIdx: null,
+        lines: [
+            createLine()
+        ],
+        stickers: []
+    }
+    updateCurrMeme(meme)
+    renderCanvas(+el.dataset.id)
+    renderStickers()
 }
 
-function onRenderCanvas(id) {
+function renderCanvas(id) {
     var sourceImg = findImg(id)
     var img = new Image();
     img.src = sourceImg.url;
     img.onload = () => {
-        console.log('after onload img')
         drawImage(img)
-        createLines()
+        drawLines()
+        drawStickers()
     }
 }
 
 function onUpdateLine(val) {
     var currId = getCurrMeme().selectedImgId
     updateLine(val)
-    onRenderCanvas(currId)
+    renderCanvas(currId)
 }
 function onAddLine() {
     var currId = getCurrMeme().selectedImgId
     addLine()
-    onRenderCanvas(currId)
+    renderCanvas(currId)
 }
-function onDeleteLine() {
+function onDeleteElement() {
     var currId = getCurrMeme().selectedImgId
-    deleteLine()
-    onRenderCanvas(currId)
+    deleteElement()
+    renderCanvas(currId)
 }
 function onUpdAlignment(align) {
     updAlignment(align)
     var currId = getCurrMeme().selectedImgId
-    onRenderCanvas(currId)
+    renderCanvas(currId)
 }
 function onUpdColor(color) {
-    var currId = getCurrMeme().selectedImgId
-    updColor(color)
-    onRenderCanvas(currId)
+    var input = document.querySelector('.color');
+    input.focus();
+    input.click();
+    input.addEventListener('input', () => {
+        updColor(input.value)
+        var currId = getCurrMeme().selectedImgId
+        renderCanvas(currId)
+    })
 }
 function onUpdColorStroke(color) {
-    var currId = getCurrMeme().selectedImgId
-    updColorStroke(color)
-    onRenderCanvas(currId)
+    var input = document.querySelector('.colorStr');
+    input.focus();
+    input.click();
+    input.addEventListener('input', () => {
+        updColorStroke(input.value)
+        var currId = getCurrMeme().selectedImgId
+        renderCanvas(currId)
+    })
 }
 function onUpdSize(val) {
     var currId = getCurrMeme().selectedImgId
     updSize(val)
-    onRenderCanvas(currId)
+    renderCanvas(currId)
 }
 function onupdFontAttr(el) {
     if (el.name === 'italic') updItalic()
     if (el.name === 'bold') updBold()
     if (el.name === 'caps') updCaps()
     var currId = getCurrMeme().selectedImgId
-    onRenderCanvas(currId)
+    renderCanvas(currId)
 }
 function onMoveLine(direct) {
     moveLine(direct)
     var currId = getCurrMeme().selectedImgId
-    onRenderCanvas(currId)
+    renderCanvas(currId)
 }
 function onCanvasClicked(ev) {
     var offsetX
@@ -93,19 +109,28 @@ function onCanvasClicked(ev) {
         offsetX = ev.offsetX
         offsetY = ev.offsetY
     }
-    var clickedLine = canvasClicked(offsetX, offsetY)
+    console.log('offsets',  offsetX,  offsetY)
+    var clickedLine = getLineClicked(offsetX, offsetY)
+    var clickedSticker = getStickerClicked(offsetX, offsetY)
     if (clickedLine) {
         updCurrLineIdx(clickedLine)
+        gMeme.selectedStickerIdx = null
         document.querySelector('.text-input').value = clickedLine.txt !== 'Enter your text' ? clickedLine.txt : ''
-        onRenderCanvas(gMeme.selectedImgId)
-        setTimeout(drawRect, 1)
-    }
+        renderCanvas(gMeme.selectedImgId)
+        setTimeout(drawRect, 0)
+    } else if (clickedSticker) {
+        updCurrStickerIdx(clickedSticker)
+        gMeme.selectedLineIdx = null
+        document.querySelector('.text-input').value = ''
+        renderCanvas(gMeme.selectedImgId)
+        setTimeout(drawRect, 0)
+    } else return
 }
 
 function onDownload(elLink) {
     const data = gCanvas.toDataURL();
     elLink.href = data;
-    elLink.download = 'my-img.gif';
+    elLink.download = 'my-img.png';
 }
 function updPage(page) {
     if (page === 'about') {
@@ -127,9 +152,14 @@ function updPage(page) {
         document.querySelector('.user-gallery').style.display = "block";
         onRenderImgs()
     }
+    if (page === 'editor') {
+        document.querySelector('.editor').style.display = 'flex';
+        document.querySelector('.about').style.display = 'none'
+        document.querySelector('.gallery').style.display = 'none';
+        document.querySelector('.user-gallery').style.display = "none";
+    }
 
 }
-
 
 
 function uploadImg(elForm, ev) {
@@ -174,11 +204,11 @@ function onSetUserImg(val) {
     document.querySelector('.gallery').style.display = 'none';
     document.querySelector('.user-gallery').style.display = "none";
     updateCurrMeme(meme)
-    onRenderCanvas(meme.selectedImgId)
+    renderCanvas(meme.selectedImgId)
 }
 
 function onRenderImgs() {
-    for(i=1; loadFromStorage(`mem${i}`); i++) {
+    for (i = 1; loadFromStorage(`mem${i}`); i++) {
         onRenderImg(`mem${i}`)
     }
 }
@@ -187,11 +217,11 @@ function onRenderImg(val) {
     var ctx = canvas.getContext('2d');
     var meme = loadFromStorage(val)
     var img = new Image();
-    var url = getImages()[meme.selectedImgId-1].url
+    var url = getImages()[meme.selectedImgId - 1].url
     img.src = url;
     img.onload = () => {
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
-        meme.lines.map(line => restoreLine(line, ctx))
+        meme.lines.forEach(line => restoreLine(line, ctx))
     }
 }
 function restoreLine(line, ctx) {
@@ -202,4 +232,43 @@ function restoreLine(line, ctx) {
     var txt = line.txt
     ctx.fillText(txt, 5, 10)
     ctx.strokeText(txt, 5, 10)
+}
+
+
+function renderStickers() {
+    var strHTMLs = ''
+    var stickers = getStickers()
+    for (let i = 0; stickers[i]; i += 5) {
+        strHTMLs += `
+        <div class="mySlides fade">
+        <p><span data-id="${i}" onclick="onAddSticker(this)">${stickers[i]}</span> 
+        <span data-id="${i + 1}" onclick="onAddSticker(this)">${stickers[i + 1]}</span> 
+        <span data-id="${i + 2}" onclick="onAddSticker(this)">${stickers[i + 2]}</span> 
+        <span data-id="${i + 3}" onclick="onAddSticker(this)">${stickers[i + 3]}</span> 
+        <span data-id="${i + 4}" onclick="onAddSticker(this)">${stickers[i + 4]}</span></p>
+        </div>`
+    }
+    document.querySelector('.stickers').innerHTML = strHTMLs
+    showSlides(getSlideIndex())
+}
+function plusSlides(n) {
+    showSlides(gSlideIndex += n);
+}
+function showSlides(n) {
+    var i;
+    var slides = document.getElementsByClassName("mySlides");
+    if (n > slides.length) { gSlideIndex = 1 }
+    if (n < 1) { gSlideIndex = slides.length }
+    for (i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none";
+    }
+    slides[gSlideIndex - 1].style.display = "block";
+}
+
+function onAddSticker(el) {
+    var stickerId = +el.dataset.id
+    addSticker(stickerId)
+    drawSticker(stickerId)
+    var currId = getCurrMeme().selectedImgId
+    renderCanvas(currId)
 }

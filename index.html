@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="css/style.css">
-    <title>Meme Generator</title>
+    <title>🐸Meme Generator</title>
 </head>
 
 <body onload="init()">
@@ -24,6 +24,7 @@
 
     <main>
         <div class="about">
+            <img src="meme/tenor.gif" alt="">
             <h2>What is the Meme Generator?</h2>
             <p>It's a free online image maker that allows you to add custom resizable text to images.
                 It operates in HTML5 canvas, so your images are created instantly on your own device.
@@ -55,7 +56,8 @@
                     <input type="text" class="item1 text-input" placeholder="Enter your text"
                         oninput="onUpdateLine(this.value)">
                     <button class="item2 add-txt" onclick="onAddLine()"><img src="icons/add.png" alt=""></button>
-                    <button class="item3 del-txt" onclick="onDeleteLine()"><img src="icons/trash.png" alt=""></button>
+                    <button class="item3 del-txt" onclick="onDeleteElement()"><img src="icons/trash.png"
+                            alt=""></button>
 
                     <button class="item4" onclick="onUpdSize(1)"><img src="icons/increase font.png" alt=""></button>
                     <button class="item5" onclick="onUpdSize(-1)"><img src="icons/decrease font.png" alt=""></button>
@@ -79,13 +81,18 @@
                     <button name="caps" class="item15" onclick="onupdFontAttr(this)"><img src="icons/case.png"
                             alt=""></button>
 
-                    <input type="color" class="item16" onchange="onUpdColor(this.value)"></input>
-                    <input type="color" class="item17" onchange="onUpdColorStroke(this.value)"></input>
+                    <button class="item16" onclick="onUpdColor(this.value)"><img src="icons/paint-board-and-brush.png"
+                            alt=""><input type="color" class="color hide"></button>
+                    <button class="item17" onclick="onUpdColorStroke(this.value)"><img src="icons/text stroke.png"
+                            alt=""><input type="color" class="colorStr hide"></button>
                     <button class="download"><a href="#" onclick="onDownload(this)" download="">Download</a></button>
                     <button class="save"><a href="#" onclick="onSave()">Save</a></button>
 
-
-
+                    <div class="slideshow-container">
+                        <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+                        <div class="stickers"></div>
+                        <a class="next" onclick="plusSlides(1)">&#10095;</a>
+                    </div>
 
                 </div>
                 <form action="" method="POST" enctype="multipart/form-data" onsubmit="uploadImg(this, event)">

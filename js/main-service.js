@@ -1,6 +1,6 @@
 
 var gKeywords = { 'happy': 12, 'funny puk': 1 }
-var gImgs = [
+const gImgs = [
     { id: 1, url: 'meme/1.jpg', keywords: ['happy'] },
     { id: 2, url: 'meme/2.jpg', keywords: ['happy'] },
     { id: 3, url: 'meme/3.jpg', keywords: ['happy'] },
@@ -21,27 +21,33 @@ var gImgs = [
     { id: 18, url: 'meme/18.jpg', keywords: ['happy'] },
     { id: 19, url: 'meme/try.gif', keywords: ['happy'] },
 ];
-var gMeme = {
-    selectedImgId: 5,
-    selectedLineIdx: 0,
-    lines: [
-        {
-            txt: 'Enter your text',
-            size: 40,
-            align: 'left',
-            color: 'white',
-            colorStroke: 'black',
-            italic: '',
-            caps: '',
-            bold: '',
-            coords: { x: 20, y: 50 }
-        }
-    ]
-}
+var gMeme
+// {
+//     selectedImgId: 5,
+//     selectedLineIdx: 0,
+//     lines: [
+//         {
+//             txt: 'Enter your text',
+//             size: 40,
+//             align: 'left',
+//             color: 'white',
+//             colorStroke: 'black',
+//             italic: '',
+//             caps: '',
+//             bold: '',
+//             coords: { x: 20, y: 50 }
+//         }
+//     ]
+// }
 
-var gCanvas = document.querySelector('#canvas');
-var gCtx = gCanvas.getContext('2d');
+const gCanvas = document.querySelector('#canvas');
+const gCtx = gCanvas.getContext('2d');
 var gSavedImgs = 0;
+const gStickers = ['🤣', '😊', '😭', '😎', '☠️',
+    '👽', '👾', '💩', '🧠', '👀',
+    '🙈', '🦥', '☄️', '💥', '🔥',
+    '🌟', '🍓', '🚀', '🎉', '💲']
+var gSlideIndex = 1;
 
 function resizeCanvas() {
     var canvasSize;
@@ -66,42 +72,28 @@ function drawImage(img) {
     gCtx.drawImage(img, 0, 0, gCanvas.width, gCanvas.height) //img,x,y,xend,yend
 }
 
+function getStickers() {
+    return gStickers
+}
+function findSticker(id) {
+    return gStickers[id]
+}
+function getSlideIndex() {
+    return gSlideIndex
+}
 function getCurrMeme() {
     return gMeme
 }
 function updateCurrMeme(val) {
-    // gMeme.selectedImgId = id
-
-    if (typeof (val) === 'object') {
-        gMeme = val
-    } else {
-        gMeme = {
-            selectedImgId: val,
-            selectedLineIdx: 0,
-            lines: [
-                {
-                    txt: 'Enter your text',
-                    size: 40,
-                    align: 'left',
-                    color: 'white',
-                    colorStroke: 'black',
-                    italic: '',
-                    caps: '',
-                    bold: '',
-                    coords: { x: 20, y: 50 }
-                }
-            ]
-        }
-    }
-
+    gMeme = val
 }
 function findImg(id) {
     return gImgs.find(img => img.id === id)
 }
-function createLines() {
-    gMeme.lines.map(line => createLine(line))
+function drawLines() {
+    gMeme.lines.forEach(line => drawLine(line))
 }
-function createLine(line) {
+function drawLine(line) {
     gCtx.lineWidth = '1.5'
     gCtx.strokeStyle = line.colorStroke
     gCtx.fillStyle = line.color
@@ -116,18 +108,11 @@ function createLine(line) {
 
 function updateLine(val) {
     gMeme.lines[gMeme.selectedLineIdx].txt = val
-    console.log(gCtx.measureText(val))
     if (gCtx.measureText(val).width > (gCanvas.width - 40)) updSize(-1)
 }
 
-function addLine() {
-    console.log('adding', gCanvas.height)
-    var lineY
-    if (gMeme.lines.length === 0) lineY = 50
-    if (gMeme.lines.length === 1) lineY = gCanvas.height - 30
-    if (gMeme.lines.length >= 2) lineY = gCanvas.height / 2
-
-    gMeme.lines.push({
+function createLine(lineY = 50) {
+    return {
         txt: 'Enter your text',
         size: 40,
         align: 'left',
@@ -137,11 +122,26 @@ function addLine() {
         caps: '',
         bold: '',
         coords: { x: 20, y: lineY }
-    })
+    }
 }
-function deleteLine() {
-    var lineToDel = gMeme.lines[gMeme.selectedLineIdx]
-    gMeme.lines.pop(lineToDel)
+
+function addLine() {
+    var lineY
+    if (gMeme.lines.length === 0) lineY = 50
+    if (gMeme.lines.length === 1) lineY = gCanvas.height - 30
+    if (gMeme.lines.length >= 2) lineY = gCanvas.height / 2
+
+    gMeme.lines.push(
+        createLine(lineY))
+}
+function deleteElement() {
+    if (gMeme.lines[gMeme.selectedLineIdx]) {
+        var lineToDel = gMeme.lines[gMeme.selectedLineIdx]
+        gMeme.lines.pop(lineToDel)
+    } else {
+        var stickerToDel = gMeme.stickers[gMeme.selectedStickerIdx]
+        gMeme.stickers.pop(stickerToDel)
+    }
 }
 function updAlignment(align) {
     gMeme.lines[gMeme.selectedLineIdx].align = align;
@@ -164,7 +164,6 @@ function updColorStroke(color) {
     gMeme.lines[gMeme.selectedLineIdx].colorStroke = color
 }
 function updSize(val) {
-    console.log('size update')
     gMeme.lines[gMeme.selectedLineIdx].size += val
 }
 function updItalic() {
@@ -177,18 +176,24 @@ function updCaps() {
     gMeme.lines[gMeme.selectedLineIdx].caps = gMeme.lines[gMeme.selectedLineIdx].caps ? '' : 'small-caps'
 }
 function moveLine(direct) {
+    var element
+    if (gMeme.selectedLineIdx !== null) {
+        element = gMeme.lines[gMeme.selectedLineIdx].coords
+    } else {
+        element = gMeme.stickers.find(el => el.id = gMeme.selectedStickerIdx)
+    }
     switch (direct) {
         case 'up':
-            gMeme.lines[gMeme.selectedLineIdx].coords.y -= 5
+            element.y -= 5
             break
         case 'right':
-            gMeme.lines[gMeme.selectedLineIdx].coords.x += 5
+            element.x += 5
             break
         case 'down':
-            gMeme.lines[gMeme.selectedLineIdx].coords.y += 5
+            element.y += 5
             break
         case 'left':
-            gMeme.lines[gMeme.selectedLineIdx].coords.x -= 5
+            element.x -= 5
             break
     }
 }
@@ -197,20 +202,52 @@ function moveLine(direct) {
 function updCurrLineIdx(clickedLine) {
     gMeme.selectedLineIdx = gMeme.lines.findIndex(el => el === clickedLine)
 }
-function canvasClicked(offsetX, offsetY) {
+function updCurrStickerIdx(clickedSticker) {
+    gMeme.selectedStickerIdx = clickedSticker.id
+}
+function getLineClicked(offsetX, offsetY) {
     var clickedLine = gMeme.lines.find(line => {
         return offsetX >= line.coords.x && offsetX <= line.coords.x + gCtx.measureText(line.txt).width
             && offsetY >= line.coords.y - line.size && offsetY <= line.coords.y
     })
     return clickedLine
 }
+function getStickerClicked(offsetX, offsetY) {
+    var clickedSticker = gMeme.stickers.find(sticker => {
+        return offsetX >= sticker.x && offsetX <= sticker.x + (gMeme.lines[0].size * 0.8)
+            && offsetY >= sticker.y - (gMeme.lines[0].size * 0.8) && offsetY <= sticker.y
+    })
+    return clickedSticker
+}
 function drawRect() {
-    var line = gMeme.lines[gMeme.selectedLineIdx]
-    gCtx.beginPath()
-    gCtx.strokeStyle = 'white'
-    gCtx.rect(line.coords.x, line.coords.y, gCanvas.width - 40, - line.size) // x,y,widht,height
-    gCtx.stroke()
+    if (gMeme.selectedLineIdx !== null) {
+        var line = gMeme.lines[gMeme.selectedLineIdx]
+        gCtx.beginPath()
+        gCtx.strokeStyle = 'white'
+        gCtx.rect(line.coords.x, line.coords.y, gCanvas.width - 40, - line.size) // x,y,widht,height
+        gCtx.stroke()
+    } else {
+        var sticker = gMeme.stickers.find(el => el.id === gMeme.selectedStickerIdx)
+        gCtx.beginPath()
+        gCtx.strokeStyle = 'white'
+        gCtx.rect(sticker.x + 5, sticker.y + 5, (gMeme.lines[0].size * 0.8), - (gMeme.lines[0].size * 0.8)) // x,y,widht,height
+        gCtx.stroke()
+    }
 }
 
+function addSticker(id) {
+    gMeme.stickers.push({ id: id, x: gCanvas.width / 2, y: gCanvas.height / 2 })
+}
+function drawStickers() {
+    gMeme.stickers.forEach(sticker => {
+        drawSticker(sticker)
+    })
+}
+function drawSticker(sticker) {
+    var stickerImg = gStickers[sticker.id]
+    gCtx.lineWidth = '1.5'
+    gCtx.font = `${gMeme.lines[0].size * 0.8}px Impact`
+    gCtx.fillText(stickerImg, sticker.x, sticker.y)
+}
 
 

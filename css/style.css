@@ -53,7 +53,11 @@ img.item:hover {
 /*ABOUT*/
 .about {
     margin: 20px;
-    display: none
+    display: none;
+    text-align: center;
+}
+.about img {
+    width: 70vw;
 }
 .user-gallery{
     margin: 20px;
@@ -122,10 +126,11 @@ canvas {
     "Ap Am al-left al-cent al-right"
     " . up italic bold case"
     "left down right color colorStr"
+    "slideshow slideshow slideshow slideshow slideshow"
     "save save . download download"
     ;
     grid-template-columns: repeat(5, 40px);
-    grid-template-rows: repeat(7, 40px);
+    grid-template-rows: repeat(8, 40px);
 }
 .item1 {
 grid-area: text;
@@ -177,6 +182,16 @@ grid-area: text;
 }
 .item17 {
     grid-area: colorStr;
+}
+.slideshow-container {
+    grid-area: slideshow;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 0.75rem;
+    font-size: 1.5rem;
+    cursor: pointer;
 }
 
 .controls-container input[type=text] {
@@ -263,23 +278,24 @@ footer {
     list-style-type: none;
 }
 
-@media (max-width: 895px) {
+@media (max-width: 950px) {
     .controls-container {
         column-gap: 10px;
         row-gap: 10px;
         grid-template-columns: repeat(5, 40px);
-        grid-template-rows: repeat(6, 40px);
+        grid-template-rows: repeat(7, 40px);
         grid-template-areas: 
     "text text text text text"
     " . add . delete . "
     "Ap Am al-left al-cent al-right"
     " . up italic bold case"
     "left down right color colorStr"
+    "slideshow slideshow slideshow slideshow slideshow"
     "save save download download download"
     ;
     }
 }
-@media (max-width: 795px) {
+@media (max-width: 895px) {
     .editor {
         flex-direction: column
     }
@@ -291,9 +307,44 @@ footer {
     }
     .controls-container {
     grid-template-columns: repeat(5, 50px);
-    grid-template-rows: repeat(6, 50px);
+    grid-template-rows: repeat(7, 50px);
     }
     form button.btn{
         height: 50px;
     }
+    .logo-img {
+        width: 100px;
+    }
+    .nav li{
+        padding: 10px;
+        font-size: 1.1rem
+    }
+}
+
+
+.mySlides {
+    display: none;
+}
+.fade {
+    -webkit-animation-name: fade;
+    -webkit-animation-duration: 1.5s;
+    animation-name: fade;
+    animation-duration: 1.5s;
+}
+  
+@-webkit-keyframes fade {
+    from {opacity: .4}
+    to {opacity: 1}
+}
+  
+@keyframes fade {
+    from {opacity: .4}
+    to {opacity: 1}
+}  
+
+.hide {
+    visibility: hidden;
+    opacity: 0;
+    max-width: 0;
+    max-height: 0;
 }
